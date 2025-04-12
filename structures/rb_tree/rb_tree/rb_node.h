@@ -102,9 +102,9 @@ namespace ds {
         bool _color;
         bool _is_nil;
     
-        std::shared_ptr<rb_node> _l; // left
-        std::shared_ptr<rb_node> _r; // right
-        std::weak_ptr<rb_node> _p; // parent
+        std::shared_ptr<rb_node<T>> _l; // left
+        std::shared_ptr<rb_node<T>> _r; // right
+        std::weak_ptr<rb_node<T>> _p; // parent
     
         template <class U> friend class rb_tree;
     };

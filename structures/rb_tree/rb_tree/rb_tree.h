@@ -22,6 +22,8 @@ namespace ds {
             ConstIterator(const ConstIterator &p_other)
             : _element_ptr(p_other._element_ptr) {}
 
+            bool is_nil() { return _element_ptr->_is_nil; }
+
             const int& operator*() const{ return _element_ptr->_key; }
             const int* operator->() const{ return &(_element_ptr->_key); }
 
@@ -50,6 +52,8 @@ namespace ds {
             : _element_ptr(element_ptr) {}
             Iterator(const Iterator &p_other)
             : _element_ptr(p_other._element_ptr) {}
+
+            bool is_nil() { return _element_ptr->_is_nil; }
 
             const int& operator*() const { return _element_ptr->_key; }
             const int* operator->() const { return &(_element_ptr->_key); }
@@ -92,28 +96,28 @@ namespace ds {
          * @parm key: the key
          * @return True if the key was not in the tree, False if not
          */
-        bool insert(T key);
+        bool insert(const T &key);
 
         /**
          * Remove a new key
          * @parm key: the key
          * @return True if the key was in the tree, False if not
          */
-        bool remove(T key);
+        bool remove(const T &key);
 
         /**
          * Search for a key
          * @parm key: the key
          * @return An iterator with the key if it is in the tree, if not, return an iterator with nil
          */
-        rb_tree<T>::Iterator search(T key) { return rb_tree<T>::Iterator(_search(key).get()); }
+        rb_tree<T>::Iterator search(const T &key) { return rb_tree<T>::Iterator(_search(key).get()); }
 
         /**
          * Search for a key
          * @parm key: the key
          * @return An iterator with the key if it is in the tree, if not, return an iterator with nil
          */
-        rb_tree<T>::ConstIterator search(T key) const { return rb_tree<T>::ConstIterator(_search(key).get()); }
+        rb_tree<T>::ConstIterator search(const T &key) const { return rb_tree<T>::ConstIterator(_search(key).get()); }
 
         /**
          * Iterator to smallest tree's key
@@ -163,7 +167,7 @@ namespace ds {
          * @parm key: the key
          * @return A pointer the key if it is in the tree, if not, return a pointer to nil
          */
-        std::shared_ptr<rb_node<T>> _search(T key) const;
+        std::shared_ptr<rb_node<T>> _search(const T &key) const;
 
         /**
          * Pointer to smallest subtree's key
@@ -184,13 +188,13 @@ namespace ds {
          * Left rotate a subtree
          * @parm root node: the subtree's node
          */
-        void left_rotation_node(std::shared_ptr<rb_node<T>> root_node);
+        void left_rotation_node(const std::shared_ptr<rb_node<T>> &root_node);
 
         /**
          * Right rotate a subtree
          * @parm root node: the subtree's node
          */
-        void right_rotation_node(std::shared_ptr<rb_node<T>> root_node);
+        void right_rotation_node(const std::shared_ptr<rb_node<T>> &root_node);
 
         /**
          * Fixup the key insertion
@@ -220,7 +224,7 @@ namespace ds {
 
 
     template <class T>
-    bool rb_tree<T>::insert(T key) {
+    bool rb_tree<T>::insert(const T &key) {
         std::shared_ptr<rb_node<T>> parent = _nil;
         std::shared_ptr<rb_node<T>> node = _root;
 
@@ -259,7 +263,7 @@ namespace ds {
     }
 
     template <class T>
-    bool rb_tree<T>::remove(T key) {
+    bool rb_tree<T>::remove(const T &key) {
         std::shared_ptr<rb_node<T>> node = _search(key);
 
         if (node == _nil) {
@@ -304,7 +308,7 @@ namespace ds {
     }
 
     template <class T>
-    std::shared_ptr<rb_node<T>> rb_tree<T>::_search(T key) const {
+    std::shared_ptr<rb_node<T>> rb_tree<T>::_search(const T &key) const {
         std::shared_ptr<rb_node<T>> node = _root;
 
         while (node != _nil && ((key < node->_key) || (node->_key < key))) {
@@ -337,7 +341,7 @@ namespace ds {
     }
 
     template <class T>
-    void rb_tree<T>::left_rotation_node(std::shared_ptr<rb_node<T>> root_node) {
+    void rb_tree<T>::left_rotation_node(const std::shared_ptr<rb_node<T>> &root_node) {
         std::shared_ptr<rb_node<T>> right_node = root_node->_r;
 
         root_node->_r = right_node->_l;
@@ -359,7 +363,7 @@ namespace ds {
     }
 
     template <class T>
-    void rb_tree<T>::right_rotation_node(std::shared_ptr<rb_node<T>> root_node) {
+    void rb_tree<T>::right_rotation_node(const std::shared_ptr<rb_node<T>> &root_node) {
         std::shared_ptr<rb_node<T>> left_node = root_node->_l;
 
         root_node->_l = left_node->_r;
