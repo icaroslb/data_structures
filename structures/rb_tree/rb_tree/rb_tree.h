@@ -3,6 +3,8 @@
 
 #include "rb_node.h"
 
+#include <functional>
+
 #ifdef RB_TREE_EXPORTS
 #define RB_TREE_API __declspec(dllexport)
 #else
@@ -88,7 +90,7 @@ namespace ds {
             _less_comp = lambda;
         }
 
-        rb_tree(bool (*comp)(const T&, const T&)) {
+        rb_tree(const std::function<bool(const T&, const T&)> &comp) {
             _nil = std::make_shared<rb_node<T>>();
             _root = _nil;
             _size = 0;
@@ -99,7 +101,9 @@ namespace ds {
             _size = tree._size;
             _nil = tree._nil;
             _root = tree._root;
+            _less_comp = tree._less_comp;
         }
+
         ~rb_tree() {
             _nil->_l = nullptr;
             _nil->_r = nullptr;
@@ -110,9 +114,14 @@ namespace ds {
                 _size = tree._size;
                 _nil = tree._nil;
                 _root = tree._root;
+                _less_comp = tree._less_comp;
             }
         
             return *this;
+        }
+
+        void initialize(const std::function<bool(const T&, const T&)> &comp) {
+            _less_comp = comp;
         }
 
         /**
@@ -242,7 +251,7 @@ namespace ds {
         size_t _size;
         std::shared_ptr<rb_node<T>> _nil;
         std::shared_ptr<rb_node<T>> _root;
-        bool (*_less_comp)(const T&, const T&);
+        std::function<bool(const T&, const T&)> _less_comp;
     };
 
 
