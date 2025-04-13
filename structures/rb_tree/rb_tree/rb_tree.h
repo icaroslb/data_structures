@@ -24,8 +24,8 @@ namespace ds {
 
             bool is_nil() { return _element_ptr->_is_nil; }
 
-            const int& operator*() const{ return _element_ptr->_key; }
-            const int* operator->() const{ return &(_element_ptr->_key); }
+            const T& operator*() const{ return _element_ptr->_key; }
+            const T* operator->() const{ return &(_element_ptr->_key); }
 
             ConstIterator& operator++() { _element_ptr = _element_ptr->successor();   return *this; }
             ConstIterator& operator--() { _element_ptr = _element_ptr->predecessor(); return *this; }
@@ -55,8 +55,8 @@ namespace ds {
 
             bool is_nil() { return _element_ptr->_is_nil; }
 
-            const int& operator*() const { return _element_ptr->_key; }
-            const int* operator->() const { return &(_element_ptr->_key); }
+            const T& operator*() const { return _element_ptr->_key; }
+            const T* operator->() const { return &(_element_ptr->_key); }
 
             Iterator& operator++() { _element_ptr = _element_ptr->successor();   return *this; }
             Iterator& operator--() { _element_ptr = _element_ptr->predecessor(); return *this; }
@@ -77,9 +77,33 @@ namespace ds {
             rb_node<T>* _element_ptr = nullptr;
         };
 
-        rb_tree() { _nil = std::make_shared<rb_node<T>>(); _root = _nil; _size = 0; }
-        rb_tree(const rb_tree<T>& tree) { _size = tree._size; _nil = tree._nil; _root = tree._root; }
-        ~rb_tree() { _nil->_l = nullptr; _nil->_r = nullptr; }
+        rb_tree() {
+            _nil = std::make_shared<rb_node<T>>();
+            _root = _nil;
+            _size = 0;
+            auto lambda = [] (const T& t0, const T& t1) -> bool {
+                return t0 < t1;
+            };
+
+            _less_comp = lambda;
+        }
+
+        rb_tree(bool (*comp)(const T&, const T&)) {
+            _nil = std::make_shared<rb_node<T>>();
+            _root = _nil;
+            _size = 0;
+            _less_comp = comp;
+        }
+
+        rb_tree(const rb_tree<T>& tree) {
+            _size = tree._size;
+            _nil = tree._nil;
+            _root = tree._root;
+        }
+        ~rb_tree() {
+            _nil->_l = nullptr;
+            _nil->_r = nullptr;
+        }
 
         rb_tree& operator= (const rb_tree& tree) {
             if (this != &tree) {
@@ -218,6 +242,7 @@ namespace ds {
         size_t _size;
         std::shared_ptr<rb_node<T>> _nil;
         std::shared_ptr<rb_node<T>> _root;
+        bool (*_less_comp)(const T&, const T&);
     };
 
 
@@ -232,9 +257,9 @@ namespace ds {
         while (node != _nil) {
             parent = node;
 
-            if (key < node->_key) {
+            if (_less_comp(key, node->_key)) {
                 node = node->_l;
-            } else if (node->_key < key) {
+            } else if (_less_comp(node->_key, key)) {
                 node = node->_r;
             } else {
                 return false;
@@ -248,7 +273,7 @@ namespace ds {
         // Insert new red node
         if (parent == _nil) {
             _root = node;
-        } else if (key < parent->_key) {
+        } else if (_less_comp(key, parent->_key)) {
             parent->_l = node;
         } else {
             parent->_r = node;
@@ -311,8 +336,8 @@ namespace ds {
     std::shared_ptr<rb_node<T>> rb_tree<T>::_search(const T &key) const {
         std::shared_ptr<rb_node<T>> node = _root;
 
-        while (node != _nil && ((key < node->_key) || (node->_key < key))) {
-            if (key < node->_key) {
+        while (node != _nil && (_less_comp(key, node->_key) || _less_comp(node->_key, key))) {
+            if (_less_comp(key, node->_key)) {
                 node = node->_l;
             } else {
                 node = node->_r;
