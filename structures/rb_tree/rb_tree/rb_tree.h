@@ -31,8 +31,8 @@ namespace ds {
 
             ConstIterator& operator++() { _element_ptr = _element_ptr->successor();   return *this; }
             ConstIterator& operator--() { _element_ptr = _element_ptr->predecessor(); return *this; }
-            ConstIterator operator++() { rb_tree::ConstIterator old_iterator = *this; _element_ptr = _element_ptr->successor();   return old_iterator; }
-            ConstIterator operator--() { rb_tree::ConstIterator old_iterator = *this; _element_ptr = _element_ptr->predecessor(); return old_iterator; }
+            ConstIterator operator++(int) { rb_tree::ConstIterator old_iterator = *this; _element_ptr = _element_ptr->successor();   return old_iterator; }
+            ConstIterator operator--(int) { rb_tree::ConstIterator old_iterator = *this; _element_ptr = _element_ptr->predecessor(); return old_iterator; }
 
             bool operator==(const ConstIterator& p_other) const { return _element_ptr == p_other._element_ptr; }
             bool operator!=(const ConstIterator& p_other) const { return _element_ptr != p_other._element_ptr; }
