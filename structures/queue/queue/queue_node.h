@@ -11,17 +11,18 @@
 
 namespace ds {
 
+    template <class T>
     struct queue_node {
         queue_node()
         {}
 
-        queue_node(const int value, const std::shared_ptr<queue_node>& next_node)
+        queue_node(const T &value, const std::shared_ptr<queue_node<T>>& next_node)
         : _value(value)
         , _next_node(next_node)
         {}
         
-        int _value;
-        std::shared_ptr<queue_node> _next_node;
+        T _value;
+        std::shared_ptr<queue_node<T>> _next_node;
     };
 
 }

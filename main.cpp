@@ -4,7 +4,7 @@
 #include <queue/queue.h>
 
 int main() {
-    ds::queue teste{};
+    ds::queue<int> teste{};
     
     size_t size = teste.get_size();
 
