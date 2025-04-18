@@ -71,25 +71,25 @@ namespace ds {
 
         linked_list()
         : _size(0)
-        , _head(nullptr)
-        , _tail(nullptr) {}
+        , _begin(nullptr)
+        , _end(nullptr) {}
 
         linked_list(const linked_list<T>& list)
         : _size(list._size)
-        , _head(list._head)
-        , _tail(list._tail) {}
+        , _begin(list._begin)
+        , _end(list._end) {}
 
         linked_list<T>::Iterator insert(const T &new_value) {
-            std::shared_ptr<linked_list_node<T>> new_node = std::make_shared<linked_list_node<T>>(new_value, _head, nullptr);
+            std::shared_ptr<linked_list_node<T>> new_node = std::make_shared<linked_list_node<T>>(new_value, _begin, nullptr);
     
-            if (_head) {
-                _head->_next = new_node;
+            if (_begin) {
+                _begin->_next = new_node;
             }
             
-            _head = new_node;
+            _begin = new_node;
     
-            if (!_tail) {
-                _tail = _head;
+            if (!_end) {
+                _end = _begin;
             }
             
             _size++;
@@ -110,7 +110,7 @@ namespace ds {
                 if (prev) {
                     prev->_next = new_node;
                 } else {
-                    _tail = new_node;
+                    _end = new_node;
                 }
     
                 return linked_list<T>::Iterator(new_node);
@@ -124,7 +124,7 @@ namespace ds {
         void remove(linked_list<T>::Iterator &remove_iterator);
 
         linked_list<T>::Iterator get(const size_t &pos) {
-            linked_list<T>::Iterator iterator{_tail};
+            linked_list<T>::Iterator iterator{_end};
             
             if (pos < _size) {
                 for (size_t i = 0; i < pos; i++) {
@@ -136,7 +136,7 @@ namespace ds {
         }
 
         linked_list<T>::Iterator search(const T &value) {
-            linked_list<T>::Iterator iterator{_tail};
+            linked_list<T>::Iterator iterator{_end};
             
             while (!iterator.is_null()) {
                 if (iterator._element_ptr->_value == value) {
@@ -150,21 +150,25 @@ namespace ds {
         }
 
         linked_list<T>::Iterator head() {
-            return linked_list<T>::Iterator{_head};
+            return linked_list<T>::Iterator{_begin};
         }
 
         linked_list<T>::Iterator tail() {
-            return linked_list<T>::Iterator{_tail};
+            return linked_list<T>::Iterator{_end};
         }
 
         size_t get_size() {
             return _size;
         }
 
+        bool is_empty() {
+            return _begin == nullptr;
+        }
+
     private:
         size_t _size;
-        std::shared_ptr<linked_list_node<T>> _head;
-        std::shared_ptr<linked_list_node<T>> _tail;
+        std::shared_ptr<linked_list_node<T>> _begin;
+        std::shared_ptr<linked_list_node<T>> _end;
     };
 
     template <class T>
@@ -205,12 +209,12 @@ namespace ds {
                 remove_iterator._element_ptr->_next->_prev = prev;
             }
 
-            if (remove_iterator._element_ptr == _head) {
-                _head = prev;
+            if (remove_iterator._element_ptr == _begin) {
+                _begin = prev;
             }
 
-            if (remove_iterator._element_ptr == _tail) {
-                _tail = remove_iterator._element_ptr->_next;
+            if (remove_iterator._element_ptr == _end) {
+                _end = remove_iterator._element_ptr->_next;
             }
 
             _size--;
