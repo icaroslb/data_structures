@@ -1,29 +1,35 @@
 #include <iostream>
 #include <algorithm>
 
-#include <queue/queue.h>
+#include <linked_list/linked_list.h>
 
 int main() {
-    ds::queue<int> teste{};
+    ds::linked_list<int> teste{};
     
     size_t size = teste.get_size();
 
-    teste.enqueue(0);
-    teste.enqueue(1);
-    teste.enqueue(2);
-    teste.enqueue(3);
-    teste.enqueue(4);
-    teste.enqueue(5);
-    teste.enqueue(6);
-    teste.enqueue(7);
-    teste.enqueue(8);
-    teste.enqueue(9);
+    teste.insert(0);
+    teste.insert(1);
+    teste.insert(2);
+    teste.insert(3);
+    teste.insert(4);
+    teste.insert(5);
+    teste.insert(6);
+    teste.insert(7);
+    teste.insert(8);
+    teste.insert(9);
 
-    while (!teste.is_empty())
+    teste.insert(2, 9);
+
+    teste.remove(size_t(5));
+
+    ds::linked_list<int>::linked_list_iterator iterator = teste.tail();
+
+    while (!iterator.is_null())
     {
-        std::cout << teste.head() << " -> ";
+        std::cout << *iterator << " -> ";
 
-        teste.dequeue();
+        ++iterator;
     }
     
 

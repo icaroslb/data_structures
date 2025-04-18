@@ -5,5 +5,5 @@ add_subdirectory(structures)
 
 add_executable(data_structure main.cpp)
 
-target_link_libraries(data_structure rb_tree stack queue)
+target_link_libraries(data_structure rb_tree stack queue linked_list)
 
