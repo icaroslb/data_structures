@@ -19,6 +19,9 @@ namespace ds {
             Iterator(const std::shared_ptr<linked_list_node<T>> &node)
             : _element_ptr(node) {}
 
+            Iterator(const Iterator &iterator)
+            : _element_ptr(iterator._element_ptr) {}
+
             T& operator*() {
                 return _element_ptr->_value;
             }
