@@ -16,6 +16,8 @@ namespace ds {
     public:
         struct Iterator
         {
+            Iterator() {}
+            
             Iterator(const std::shared_ptr<linked_list_node<T>> &node)
             : _element_ptr(node) {}
 
@@ -26,7 +28,7 @@ namespace ds {
                 return _element_ptr->_value;
             }
 
-            T* operator7() {
+            T* operator&() {
                 return &(_element_ptr->_value);
             }
 
@@ -61,7 +63,7 @@ namespace ds {
                 return iterator;
             }
 
-            bool is_null() {
+            bool is_null() const {
                 return _element_ptr == nullptr;
             }
 
@@ -123,7 +125,7 @@ namespace ds {
         bool remove(const T &value);
         void remove(linked_list<T>::Iterator &remove_iterator);
 
-        linked_list<T>::Iterator get(const size_t &pos) {
+        linked_list<T>::Iterator get(const size_t &pos) const {
             linked_list<T>::Iterator iterator{_begin};
             
             if (pos < _size) {
@@ -135,7 +137,7 @@ namespace ds {
             return iterator;
         }
 
-        linked_list<T>::Iterator search(const T &value) {
+        linked_list<T>::Iterator search(const T &value) const {
             linked_list<T>::Iterator iterator{_begin};
             
             while (!iterator.is_null()) {
@@ -149,19 +151,19 @@ namespace ds {
             return iterator;
         }
 
-        linked_list<T>::Iterator begin() {
+        linked_list<T>::Iterator begin() const {
             return linked_list<T>::Iterator{_end};
         }
 
-        linked_list<T>::Iterator end() {
+        linked_list<T>::Iterator end() const {
             return linked_list<T>::Iterator{_begin};
         }
 
-        size_t get_size() {
+        size_t get_size() const {
             return _size;
         }
 
-        bool is_empty() {
+        bool is_empty() const {
             return _end == nullptr;
         }
 
