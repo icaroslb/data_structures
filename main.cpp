@@ -23,7 +23,7 @@ int main() {
 
     teste.remove(size_t(5));
 
-    ds::linked_list<int>::Iterator iterator = teste.end();
+    ds::linked_list<int>::Iterator iterator = teste.begin();
 
     while (!iterator.is_null())
     {

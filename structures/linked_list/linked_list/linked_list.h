@@ -152,11 +152,11 @@ namespace ds {
         }
 
         linked_list<T>::Iterator begin() const {
-            return linked_list<T>::Iterator{_end};
+            return linked_list<T>::Iterator{_begin};
         }
 
         linked_list<T>::Iterator end() const {
-            return linked_list<T>::Iterator{_begin};
+            return linked_list<T>::Iterator{_end};
         }
 
         size_t get_size() const {
