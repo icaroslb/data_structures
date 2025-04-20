@@ -70,6 +70,62 @@ namespace ds {
             std::shared_ptr<linked_list_node<T>> _element_ptr = nullptr;
         };
 
+        struct rIterator
+        {
+            rIterator() {}
+            
+            rIterator(const std::shared_ptr<linked_list_node<T>> &node)
+            : _element_ptr(node) {}
+
+            rIterator(const rIterator &iterator)
+            : _element_ptr(iterator._element_ptr) {}
+
+            T& operator*() {
+                return _element_ptr->_value;
+            }
+
+            T* operator&() {
+                return &(_element_ptr->_value);
+            }
+
+            rIterator& operator= (const rIterator &iterator) {
+                _element_ptr = iterator._element_ptr;
+            }
+
+            rIterator& operator++() {
+                if (_element_ptr) {
+                    _element_ptr = _element_ptr->_prev.lock();
+                }
+                return *this;
+            }
+            rIterator& operator--() {
+                if (_element_ptr) {
+                    _element_ptr = _element_ptr->_next;
+                }
+                return *this;
+            }
+            rIterator operator++(int) {
+                rIterator iterator = *this;
+                if (_element_ptr) {
+                    _element_ptr = _element_ptr->_prev.lock();
+                }
+                return iterator;
+            }
+            rIterator operator--(int) {
+                rIterator iterator = *this;
+                if (_element_ptr) {
+                    _element_ptr = _element_ptr->_next;
+                }
+                return iterator;
+            }
+
+            bool is_null() const {
+                return _element_ptr == nullptr;
+            }
+
+            std::shared_ptr<linked_list_node<T>> _element_ptr = nullptr;
+        };
+
 
         linked_list()
         : _size(0)
@@ -157,6 +213,14 @@ namespace ds {
 
         linked_list<T>::Iterator end() const {
             return linked_list<T>::Iterator{_end};
+        }
+
+        linked_list<T>::rIterator rbegin() const {
+            return linked_list<T>::rIterator{_end};
+        }
+
+        linked_list<T>::rIterator rend() const {
+            return linked_list<T>::rIterator{_begin};
         }
 
         size_t get_size() const {

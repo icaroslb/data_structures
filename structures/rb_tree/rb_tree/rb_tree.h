@@ -79,6 +79,68 @@ namespace ds {
             rb_node<T>* _element_ptr = nullptr;
         };
 
+        struct ConstrIterator {
+            ConstrIterator() = default;
+            ConstrIterator(const rb_node<T>* element_ptr)
+            : _element_ptr(element_ptr) {}
+            ConstrIterator(const ConstrIterator &p_other)
+            : _element_ptr(p_other._element_ptr) {}
+
+            bool is_nil() { return _element_ptr->_is_nil; }
+
+            const T& operator*() const{ return _element_ptr->_key; }
+            const T* operator->() const{ return &(_element_ptr->_key); }
+
+            ConstrIterator& operator++() { _element_ptr = _element_ptr->predecessor();   return *this; }
+            ConstrIterator& operator--() { _element_ptr = _element_ptr->successor(); return *this; }
+            ConstrIterator operator++(int) { rb_tree<T>::ConstrIterator old_iterator = *this; _element_ptr = _element_ptr->predecessor();   return old_iterator; }
+            ConstrIterator operator--(int) { rb_tree<T>::ConstrIterator old_iterator = *this; _element_ptr = _element_ptr->successor(); return old_iterator; }
+
+            bool operator==(const ConstrIterator& p_other) const { return _element_ptr == p_other._element_ptr; }
+            bool operator!=(const ConstrIterator& p_other) const { return _element_ptr != p_other._element_ptr; }
+
+            ConstrIterator& operator=(const ConstrIterator& p_other) {
+                if (this != &p_other) {
+                    _element_ptr = p_other._element_ptr;
+                }
+                return *this;
+            }
+
+        private:
+            const rb_node<T>* _element_ptr = nullptr;
+        };
+
+        struct rIterator {
+            rIterator() = default;
+            rIterator(rb_node<T>* element_ptr)
+            : _element_ptr(element_ptr) {}
+            rIterator(const rIterator &p_other)
+            : _element_ptr(p_other._element_ptr) {}
+
+            bool is_nil() { return _element_ptr->_is_nil; }
+
+            const T& operator*() const { return _element_ptr->_key; }
+            const T* operator->() const { return &(_element_ptr->_key); }
+
+            rIterator& operator++() { _element_ptr = _element_ptr->predecessor();   return *this; }
+            rIterator& operator--() { _element_ptr = _element_ptr->successor(); return *this; }
+            rIterator operator++(int) { rIterator old_iterator = *this; _element_ptr = _element_ptr->predecessor();   return old_iterator; }
+            rIterator operator--(int) { rIterator old_iterator = *this; _element_ptr = _element_ptr->successor(); return old_iterator; }
+
+            bool operator==(const rIterator& p_other) const { return _element_ptr == p_other._element_ptr; }
+            bool operator!=(const rIterator& p_other) const { return _element_ptr != p_other._element_ptr; }
+
+            rIterator& operator=(const rIterator& p_other) {
+                if (this != &p_other) {
+                    _element_ptr = p_other._element_ptr;
+                }
+                return *this;
+            }
+
+        private:
+            rb_node<T>* _element_ptr = nullptr;
+        };
+
         rb_tree() {
             _nil = std::make_shared<rb_node<T>>();
             _root = _nil;
@@ -177,6 +239,30 @@ namespace ds {
     	rb_tree<T>::ConstIterator end() const { return rb_tree<T>::ConstIterator(_nil->max()); }
 
         /**
+         * Iterator to smallest tree's key
+         * @return An iterator with the smallest key if it is in the tree, if the tree did not have any key, return an iterator with nil
+         */
+        rb_tree<T>::rIterator rbegin() { return rb_tree<T>::rIterator(_root->max()); }
+
+        /**
+         * Iterator to smallest tree's key
+         * @return An iterator with the smallest key if it is in the tree, if the tree did not have any key, return an iterator with nil
+         */
+        rb_tree<T>::ConstrIterator rbegin() const { return rb_tree<T>::ConstrIterator(_root->max()); }
+
+        /**
+         * Iterator to end
+         * @return An iterator with nil
+         */
+    	rb_tree<T>::rIterator rend() { return rb_tree<T>::rIterator(_nil->min()); }
+
+        /**
+         * Iterator to end
+         * @return An iterator with nil
+         */
+    	rb_tree<T>::ConstrIterator rend() const { return rb_tree<T>::ConstrIterator(_nil->min()); }
+
+        /**
          * Iterator to nil
          * @return An iterator with nil
          */
@@ -187,6 +273,18 @@ namespace ds {
          * @return An iterator with nil
          */
         rb_tree<T>::ConstIterator nil() const { return rb_tree<T>::ConstIterator(_nil.get()); }
+
+        /**
+         * Iterator to nil
+         * @return An iterator with nil
+         */
+        rb_tree<T>::rIterator rnil() { return rb_tree<T>::rIterator(_nil.get()); }
+
+        /**
+         * Iterator to nil
+         * @return An iterator with nil
+         */
+        rb_tree<T>::ConstrIterator rnil() const { return rb_tree<T>::ConstrIterator(_nil.get()); }
 
         /**
          * Get the current tree size
